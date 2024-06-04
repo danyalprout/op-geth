@@ -258,6 +258,8 @@ func (t *callTracer) GetResult() (json.RawMessage, error) {
 
 	if t.callstack[0].Type == vm.STOP {
 		t.callstack[0].Error = "failed deposit transaction"
+		t.callstack[0].To = nil
+		t.callstack[0].Gas = 0
 	}
 
 	res, err := json.Marshal(t.callstack[0])
