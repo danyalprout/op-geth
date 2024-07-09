@@ -470,13 +470,13 @@ func (s *Suite) TestSnapGetByteCodes(t *utesting.T) {
 			desc:      `Here we request state roots as code hashes. The server should deliver an empty response with no items.`,
 			nBytes:    10000,
 			hashes:    []common.Hash{genesisRoot, headRoot},
-			expHashes: 1, // 32-byte keys are detected as code, even if not code (like genesis hash), in legacy lookups.
+			expHashes: 0,
 		},
 		{
 			desc:      `Here we request the genesis state root (which is not an existing code hash) two times. The server should deliver an empty response with no items.`,
 			nBytes:    10000,
 			hashes:    []common.Hash{genesisRoot, genesisRoot},
-			expHashes: 2, // 32-byte keys are detected as code, even if not code (like genesis hash), in legacy lookups.
+			expHashes: 0,
 		},
 		// Empties
 		{

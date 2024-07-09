@@ -212,6 +212,8 @@ func (t *flatCallTracer) GetResult() (json.RawMessage, error) {
 
 	if t.tracer.callstack[0].Type == vm.STOP {
 		t.tracer.callstack[0].Error = "failed deposit transaction"
+		t.tracer.callstack[0].To = nil
+		t.tracer.callstack[0].Gas = 0
 	}
 
 	flat, err := flatFromNested(&t.tracer.callstack[0], []int{}, t.config.ConvertParityErrors, t.ctx)

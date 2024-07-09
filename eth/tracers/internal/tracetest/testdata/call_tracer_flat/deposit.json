@@ -40,13 +40,26 @@
     "totalDifficulty": "7160543502214733"
   },
   "input": "0x7ef85aa0b4f9f798a5fe956d1b79c3eff355febf9e1039a7440948845536982cb62aa03194bc339e628e6fe32c39e84392d087567b2743ea3594bc339e628e6fe32c39e84392d087567b2743ea3580871aa535d3d0c00083030d408000",
-  "result": {
-    "from":"0xBc339E628E6fe32C39E84392D087567B2743Ea35",
-    "to": "0xbc339e628e6fe32c39e84392d087567b2743ea35",
-    "gas":"0x30d40",
-    "gasUsed":"0x30d40",
-    "input":"0x00",
-    "value": "0x1aa535d3d0c000",
-    "type":"CALL"
-  }
+  "result": [{
+    "type": "call",
+    "action": {
+      "author": "0x0000000000000000000000000000000000000000",
+      "refundAddress": "0x0000000000000000000000000000000000000000",
+      "from":"0xBc339E628E6fe32C39E84392D087567B2743Ea35",
+      "to": "0xbc339e628e6fe32c39e84392d087567b2743ea35",
+      "gas":"0x30d40",
+      "gasUsed":"0x30d40",
+      "input":"0x00",
+      "value": "0x1aa535d3d0c000",
+      "callType":"call",
+      "address": "0x0000000000000000000000000000000000000000",
+      "balance": "0x0"
+    },
+    "result": {
+      "address": "0x0000000000000000000000000000000000000000",
+      "gasUsed": "0x30d40",
+      "output": "0x"
+    },
+    "traceAddress": []
+  }]
 }

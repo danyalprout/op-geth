@@ -103,6 +103,19 @@ func New(eth Backend, config Config, engine consensus.Engine) *Miner {
 // and statedb. The returned values can be nil in case the pending block is
 // not initialized.
 func (miner *Miner) Pending() (*types.Block, types.Receipts, *state.StateDB) {
+	if miner.chainConfig.Optimism != nil && !miner.config.RollupComputePendingBlock {
+		// For compatibility when not computing a pending block, we serve the latest block as "pending"
+		headHeader := miner.chain.CurrentHeader()
+		headBlock := miner.chain.GetBlock(headHeader.Hash(), headHeader.Number.Uint64())
+		headReceipts := miner.chain.GetReceiptsByHash(headHeader.Hash())
+		stateDB, err := miner.chain.StateAt(headHeader.Root)
+		if err != nil {
+			return nil, nil, nil
+		}
+
+		return headBlock, headReceipts, stateDB.Copy()
+	}
+
 	pending := miner.getPending()
 	if pending == nil {
 		return nil, nil, nil

@@ -507,6 +507,8 @@ func signalToErr(signal int32) error {
 		return errBlockInterruptedByRecommit
 	case commitInterruptTimeout:
 		return errBlockInterruptedByTimeout
+	case commitInterruptResolve:
+		return errBlockInterruptedByResolve
 	default:
 		panic(fmt.Errorf("undefined signal %d", signal))
 	}
