@@ -121,33 +121,43 @@ func main() {
 			listenerAddr = natAddr
 		}
 	}
+	setLocalNodeFallback(ln, *listenerAddr)
 
-	printNotice(&nodeKey.PublicKey, *listenerAddr)
 	cfg := discover.Config{
 		PrivateKey:  nodeKey,
 		NetRestrict: restrictList,
 	}
+	var localNode *enode.Node
 	if *runv5 {
-		if _, err := discover.ListenV5(conn, ln, cfg); err != nil {
+		disc, err := discover.ListenV5(conn, ln, cfg)
+		if err != nil {
 			utils.Fatalf("%v", err)
 		}
+		localNode = disc.Self()
 	} else {
-		if _, err := discover.ListenUDP(conn, ln, cfg); err != nil {
+		disc, err := discover.ListenUDP(conn, ln, cfg)
+		if err != nil {
 			utils.Fatalf("%v", err)
 		}
+		localNode = disc.Self()
 	}
+	logStartup(localNode)
 
 	select {}
 }
 
-func printNotice(nodeKey *ecdsa.PublicKey, addr net.UDPAddr) {
+func setLocalNodeFallback(ln *enode.LocalNode, addr net.UDPAddr) {
 	if addr.IP.IsUnspecified() {
-		addr.IP = net.IP{127, 0, 0, 1}
+		addr.IP = net.IPv4(127, 0, 0, 1)
 	}
-	n := enode.NewV4(nodeKey, addr.IP, 0, addr.Port)
-	fmt.Println(n.URLv4())
-	fmt.Println("Note: you're using cmd/bootnode, a developer tool.")
-	fmt.Println("We recommend using a regular node as bootstrap node for production deployments.")
+	ln.SetFallbackIP(addr.IP)
+	ln.SetFallbackUDP(addr.Port)
+}
+
+func logStartup(node *enode.Node) {
+	log.Info("Bootnode started", "enode", node.URLv4(), "enr", node.String())
+	log.Warn("cmd/bootnode is a developer tool")
+	log.Warn("Use a regular node as bootstrap node for production deployments")
 }
 
 func doPortMapping(natm nat.Interface, ln *enode.LocalNode, addr *net.UDPAddr) *net.UDPAddr {
